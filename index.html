@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Will you be my Valentine? 🌹</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffeef0 30%, #fff0f5 60%, #ffe4e6 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Floating flowers and bears background */
+        .flower {
+            position: absolute;
+            font-size: 24px;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.7;
+        }
+
+        .bear {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.8;
+        }
+        
+        .bear img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .bear:not(img) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-30px) rotate(10deg);
+                opacity: 1;
+            }
+        }
+
+        /* Wrapper for bear to help with background blending */
+        .bear-wrapper {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            pointer-events: none;
+            animation: floatBear 3s ease-in-out infinite;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        
+        .bear-wrapper.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Fixed kawaii bear above headline */
+        .fixed-bear {
+            width: 200px;
+            height: auto;
+            display: block;
+            /* Transparent background PNG image */
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+        }
+
+        @keyframes floatBear {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+        
+        /* Ensure wrapper maintains transform for animation */
+        .bear-wrapper {
+            transform-origin: center top;
+        }
+
+        /* Page 1 - The Question */
+        .page-1 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .page-1.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .headline {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #c41e3a;
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease-out;
+            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.3);
+            line-height: 1.2;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        /* Wrapper for Yes button to make clickable area grow */
+        .btn-yes-wrapper {
+            display: inline-block;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #e91e63 0%, #f06292 50%, #ff6b9d 100%);
+            color: white;
+            transform-origin: center;
+        }
+
+        .btn-yes-wrapper:hover .btn-yes,
+        .btn-yes:active {
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        .btn-yes:active {
+            animation: bounce 0.3s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #c9c9c9 0%, #e0e0e0 100%);
+            color: #666;
+            position: relative;
+        }
+
+        .btn-no:hover {
+            transform: scale(0.95);
+        }
+
+        /* Page 2 - The Letter */
+        .page-2 {
+            display: none;
+            min-height: 100vh;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1s ease-in;
+            scroll-margin-top: 0;
+        }
+
+        .page-2.visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .letter-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-container::before {
+            content: '🌹';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            opacity: 0.2;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .letter-greeting {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: #c41e3a;
+            margin-bottom: 30px;
+            animation: fadeInLine 0.8s ease-out;
+        }
+
+        .letter-paragraph {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: justify;
+            animation: fadeInLine 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .letter-paragraph:nth-child(2) { animation-delay: 0.2s; }
+        .letter-paragraph:nth-child(3) { animation-delay: 0.4s; }
+        .letter-paragraph:nth-child(4) { animation-delay: 0.6s; }
+        .letter-paragraph:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes fadeInLine {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .letter-closing {
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            color: #c41e3a;
+            margin-top: 40px;
+            text-align: right;
+            animation: fadeInLine 0.8s ease-out 1s both;
+        }
+
+        /* Petals/flower sparkles effect */
+        .sparkle {
+            position: absolute;
+            font-size: 18px;
+            animation: sparkle 2s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .bear-wrapper {
+                top: 10px;
+            }
+            
+            .fixed-bear {
+                width: 150px;
+            }
+
+            .headline {
+                margin-bottom: 40px;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .letter-container {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Prevent text selection on buttons for better UX */
+        .btn {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating flowers and bears background -->
+    <div id="flowers-container"></div>
+    <div id="sparkles-container"></div>
+
+    <!-- Fixed kawaii bear above headline -->
+    <div class="bear-wrapper">
+        <img src="images/bear.png" 
+             alt="Cute Valentine's Day Teddy Bear" 
+             class="fixed-bear"
+             id="bearImage">
+    </div>
+
+    <!-- Page 1: The Question -->
+    <div class="page-1" id="page1">
+        <h1 class="headline">Will you be my Valentine? 🌹</h1>
+        <div class="buttons-container">
+            <div class="btn-yes-wrapper" id="btnYesWrapper">
+                <button class="btn btn-yes" id="btnYes">Yes 🌸</button>
+            </div>
+            <button class="btn btn-no" id="btnNo">No 😢</button>
+        </div>
+    </div>
+
+    <!-- Page 2: The Letter -->
+    <div class="page-2" id="page2">
+        <div class="letter-container">
+            <div class="letter-greeting">Dear Rahee,</div>
+            
+            <p class="letter-paragraph">
+                From the moment I met you, my world has been brighter, warmer, and infinitely more beautiful. 
+                Every day with you feels like a gift, and every moment we share becomes a cherished memory.
+            </p>
+            
+            <p class="letter-paragraph">
+                Your smile lights up my darkest days, your laugh is my favorite sound, and your presence 
+                makes everything better. You are the most amazing person I know, and I feel incredibly 
+                lucky to have you in my life.
+            </p>
+            
+            <p class="letter-paragraph">
+                This Valentine's Day, I want to ask you something special. Will you be my Valentine? 
+                Not just for one day, but for all the days to come. I want to celebrate love with you, 
+                create beautiful memories together, and make every day feel like Valentine's Day.
+            </p>
+            
+            <p class="letter-paragraph">
+
+                You mean the world to me, and I can't imagine my life without you. Thank you for being 
+                you, for being in my life, and for making every day better just by being in it.
+            </p>
+            
+            <div class="letter-closing">
+                Love,<br>
+                Meet 🌹🐻
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const btnYes = document.getElementById('btnYes');
+        const btnYesWrapper = document.getElementById('btnYesWrapper');
+        const btnNo = document.getElementById('btnNo');
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const flowersContainer = document.getElementById('flowers-container');
+        const sparklesContainer = document.getElementById('sparkles-container');
+        const bearWrapper = document.querySelector('.bear-wrapper');
+
+        // Track how many times "No" has been attempted
+        let noAttempts = 0;
+        let yesScale = 1;
+        let yesClicked = false;
+
+        // Flower emojis array
+        const flowers = ['🌹', '🌸', '🌺', '🌻', '🌷', '💐', '🌼'];
+        
+        // Cute cartoon bear images - using free, publicly available cartoon bear images
+        // These are cute cartoon-style bears that work right away!
+        // You can replace these with your own images from Google Images if you prefer
+        const bearImages = [
+            'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f43b.svg', // 🐻 Bear emoji as SVG
+            'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f9f8.svg', // 🧸 Teddy bear emoji as SVG
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgZmlsbD0iI0Y0QzU4NSIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iMzUiIHI9IjgiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2NSIgY3k9IjM1IiByPSI4IiBmaWxsPSIjMDAwIi8+PGVsbGlwc2UgY3g9IjUwIiBjeT0iNTUiIHJ4PSIxNSIgcnk9IjEwIiBmaWxsPSIjMDAwIi8+PGVsbGlwc2UgY3g9IjMwIiBjeT0iNzAiIHJ4PSI4IiByeT0iMTIiIGZpbGw9IiNGNEM1ODUiLz48ZWxsaXBzZSBjeD0iNzAiIGN5PSI3MCIgcng9IjgiIHJ5PSIxMiIgZmlsbD0iI0Y0QzU4NSIvPjwvc3ZnPg==', // Cute cartoon bear SVG
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgZmlsbD0iI0Y1QjU4NSIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iMzUiIHI9IjgiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSI2NSIgY3k9IjM1IiByPSI4IiBmaWxsPSIjMDAwIi8+PHBhdGggZD0iTTQwIDU1IFE1MCA2NSA2MCA1NSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiLz48ZWxsaXBzZSBjeD0iMzAiIGN5PSI3MCIgcng9IjgiIHJ5PSIxMiIgZmlsbD0iI0Y1QjU4NSIvPjxlbGxpcHNlIGN4PSI3MCIgY3k9IjcwIiByeD0iOCIgcnk9IjEyIiBmaWxsPSIjRjVCNTg1Ii8+PC9zdmc+', // Happy cartoon bear SVG
+        ];
+        
+        // Set to true to use cartoon bear images, false to use emoji bears
+        const useBearImages = true;
+
+        // Create floating flowers and bears
+        function createFlower() {
+            const isBear = Math.random() > 0.7;
+            let element;
+            
+            if (isBear && useBearImages) {
+                // Create bear image element
+                element = document.createElement('img');
+                element.className = 'bear';
+                element.src = bearImages[Math.floor(Math.random() * bearImages.length)];
+                element.alt = 'Cute bear';
+                // Fallback to emoji if image fails to load
+                element.onerror = function() {
+                    this.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'bear';
+                    fallback.style.fontSize = '24px';
+                    fallback.style.width = 'auto';
+                    fallback.style.height = 'auto';
+                    fallback.textContent = '🐻';
+                    fallback.style.left = this.style.left;
+                    fallback.style.top = this.style.top;
+                    fallback.style.animationDelay = this.style.animationDelay;
+                    fallback.style.animationDuration = this.style.animationDuration;
+                    flowersContainer.appendChild(fallback);
+                };
+            } else {
+                // Create flower or emoji bear element
+                element = document.createElement('div');
+                if (isBear) {
+                    element.className = 'bear';
+                    element.style.fontSize = '24px';
+                    element.style.width = 'auto';
+                    element.style.height = 'auto';
+                    element.textContent = '🐻';
+                } else {
+                    element.className = 'flower';
+                    element.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                }
+            }
+            
+            element.style.left = Math.random() * 100 + '%';
+            element.style.top = Math.random() * 100 + '%';
+            element.style.animationDelay = Math.random() * 2 + 's';
+            element.style.animationDuration = (4 + Math.random() * 4) + 's';
+            flowersContainer.appendChild(element);
+
+            // Remove after animation
+            setTimeout(() => {
+                element.remove();
+            }, 10000);
+        }
+
+        // Create petal/flower sparkles
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            const petals = ['🌸', '🌺', '🌼', '🌷'];
+            sparkle.textContent = petals[Math.floor(Math.random() * petals.length)];
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 1 + 's';
+            sparklesContainer.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 3000);
+        }
+
+        // Initialize background effects
+        function initEffects() {
+            // Create initial flowers and bears
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => createFlower(), i * 500);
+            }
+
+            // Create petals periodically
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    createSparkle();
+                }
+            }, 2000);
+
+            // Keep flowers floating
+            setInterval(() => {
+                if (flowersContainer.children.length < 10) {
+                    createFlower();
+                }
+            }, 3000);
+        }
+
+        // Handle "No" button interactions
+        function handleNoButton() {
+            noAttempts++;
+            
+            // Make "Yes" button wrapper grow (this makes the clickable area grow too!)
+            yesScale += 0.15;
+            btnYesWrapper.style.transform = `scale(${yesScale})`;
+            btnYesWrapper.style.transition = 'transform 0.3s ease';
+            
+            // Make "No" button harder to click
+            const moveDistance = Math.min(100 + noAttempts * 20, 200);
+            const angle = Math.random() * Math.PI * 2;
+            const x = Math.cos(angle) * moveDistance;
+            const y = Math.sin(angle) * moveDistance;
+            
+            btnNo.style.transform = `translate(${x}px, ${y}px) scale(${Math.max(0.7 - noAttempts * 0.05, 0.4)})`;
+            btnNo.style.transition = 'transform 0.2s ease';
+            
+            // Add some visual feedback
+            btnNo.style.opacity = Math.max(0.6 - noAttempts * 0.05, 0.3);
+            
+            // Create extra flowers when "No" is clicked
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createFlower(), i * 100);
+            }
+        }
+
+        // Handle "Yes" button click
+        function handleYesButton() {
+            if (yesClicked) return; // Prevent double-firing
+            yesClicked = true;
+            
+            // Scroll to top immediately so letter will be visible
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            
+            // Add celebration effect
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createFlower();
+                    createSparkle();
+                }, i * 50);
+            }
+            
+            // Transition to page 2
+            setTimeout(() => {
+                page1.classList.add('hidden');
+                page2.classList.add('visible');
+                
+                // Hide the fixed bear when showing the letter page (with smooth fade)
+                if (bearWrapper) {
+                    bearWrapper.classList.add('hidden');
+                }
+                
+                // Ensure we're at the top - use instant scroll for immediate visibility
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                // Force scroll to page2 start
+                setTimeout(() => {
+                    page2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 50);
+                
+                // Add more petals to the letter page
+                setTimeout(() => {
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(() => createSparkle(), i * 100);
+                    }
+                }, 500);
+            }, 500);
+        }
+
+        // Event listeners - attach to both wrapper and button for full clickable area
+        btnYes.addEventListener('click', handleYesButton);
+        btnYes.addEventListener('touchstart', handleYesButton, { passive: true });
+        btnYesWrapper.addEventListener('click', handleYesButton);
+        btnYesWrapper.addEventListener('touchstart', handleYesButton, { passive: true });
+
+        // Multiple event types for "No" button to catch all interactions
+        btnNo.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleNoButton();
+        });
+        
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleNoButton();
+        }, { passive: false });
+        
+        btnNo.addEventListener('mouseenter', () => {
+            if (noAttempts > 0) {
+                handleNoButton();
+            }
+        });
+
+        // Prevent accidental zooming on mobile
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Initialize effects when page loads
+        window.addEventListener('load', () => {
+            initEffects();
+        });
+    </script>
+</body>
+</html>
